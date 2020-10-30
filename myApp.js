@@ -1,9 +1,14 @@
 require('dotenv').config();
 var express = require('express');
 var app = express();
+const bodyParser = require('body-parser');
 
 // --> 7)  Mount the Logger middleware here
 
+app.use(function (req, res, next) {
+    console.log(`${req.method} ${req.path} - ${req.ip}`);
+    next();
+});
 
 // --> 11)  Mount the body-parser middleware  here
 
@@ -20,24 +25,15 @@ app.get('/', function(req, res) {
 })
 */
 
-/** 7) Root-level Middleware - A logger */
-//  place it before all the routes !
-
-app.use(function (req, res, next) {
-    console.log(`${req.method} ${req.path} - ${req.ip}`);
-    next();
-});
-
-/** 4) Serve static assets  */
-
-app.use(express.static(__dirname + '/public'));
-
-
 /** 3) Serve an HTML file */
 
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/views/index.html');
 });
+
+/** 4) Serve static assets  */
+
+app.use(express.static(__dirname + '/public'));
 
 /** 5) serve JSON on a specific route */
 
@@ -56,6 +52,10 @@ app.get('/json', function (req, res) {
         res.json({message: "Hello json"});
     }
 }); 
+
+/** 7) Root-level Middleware - A logger */
+//  place it before all the routes !
+
 
 
 /** 8) Chaining middleware. A Time server */
