@@ -19,15 +19,25 @@ app.get('/', function(req, res) {
     res.send('Response String');
 })
 */
-/** 3) Serve an HTML file */
 
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/views/index.html');
+/** 7) Root-level Middleware - A logger */
+//  place it before all the routes !
+
+app.use(function (req, res, next) {
+    console.log(`${req.method} ${req.path} - ${req.ip}`);
+    next();
 });
 
 /** 4) Serve static assets  */
 
 app.use(express.static(__dirname + '/public'));
+
+
+/** 3) Serve an HTML file */
+
+app.get('/', function (req, res) {
+    res.sendFile(__dirname + '/views/index.html');
+});
 
 /** 5) serve JSON on a specific route */
 
@@ -46,9 +56,6 @@ app.get('/json', function (req, res) {
         res.json({message: "Hello json"});
     }
 }); 
-
-/** 7) Root-level Middleware - A logger */
-//  place it before all the routes !
 
 
 /** 8) Chaining middleware. A Time server */
